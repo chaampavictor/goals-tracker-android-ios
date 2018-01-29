@@ -1,4 +1,4 @@
-package com.myreactnativeplayground;
+package com.goals;
 
 import android.app.Application;
 
