@@ -8,30 +8,24 @@ import React, { Component } from 'react';
 import {
   Platform,
   StyleSheet,
+  SectionList,
   Text,
   View
 } from 'react-native';
-
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
 
 export default class App extends Component<{}> {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <Text style={styles.instructions}>
-          {instructions}
-        </Text>
+      <SectionList
+        sections = {[
+          {title: 'Short-term', data: ['Goal #1']},
+          {title: 'Medium-term', data: ['Goal #2']},
+          {title: 'Long-term', data: ['Goal #3']},
+          ]}
+          renderItem = {({item}) => <Text style = {styles.mainListViewRow}> {item} </Text> }
+          renderSectionHeader = {({section}) => <Text style = {styles.mainListViewHeader}> {section.title} </Text>}
+          keyExtractor = {(item, index) => index} />
       </View>
     );
   }
@@ -44,14 +38,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
-  welcome: {
-    fontSize: 20,
+  mainListViewRow: {
+    fontSize: 24,
     textAlign: 'center',
-    margin: 10,
+    padding: 15,
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+  mainListViewHeader: {
+    fontSize: 40,
+    padding: 25,
   },
 });
