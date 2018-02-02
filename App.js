@@ -9,6 +9,7 @@ import PopupDialog from 'react-native-popup-dialog';
 import DatePicker from 'react-native-datepicker'
 import FAB from 'react-native-fab';
 import {
+  AsyncStorage,
   Platform,
   StyleSheet,
   SectionList,
@@ -18,6 +19,23 @@ import {
 } from 'react-native';
 
 export default class App extends Component<{}> {
+
+  async storeGoal(goal) {
+    try{
+      await AsyncStorage.setItem('Test Goal', goal);
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  async retrieveGoal(key) {
+    try {
+      value = AsyncStorage.getItem('Test Goal');
+    } catch (error) {
+      console.log(error.message);
+    }
+    AsyncStorage.getItem(key);
+  }
   render() {
     return (
       <View style={styles.container}>
