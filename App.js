@@ -20,6 +20,11 @@ import {
 
 export default class App extends Component<{}> {
 
+
+  constructor(props){
+    super(props)
+    this.state = {startDate:"2018-02-03", endDate: "2018-02-03" };
+  }
   async storeGoal(goal) {
     try{
       await AsyncStorage.setItem('Test Goal', goal);
@@ -30,11 +35,11 @@ export default class App extends Component<{}> {
 
   async retrieveGoal(key) {
     try {
-      value = AsyncStorage.getItem('Test Goal');
+      value = await AsyncStorage.getItem('Test Goal');
+      return value;
     } catch (error) {
       console.log(error.message);
     }
-    AsyncStorage.getItem(key);
   }
   render() {
     return (
@@ -61,10 +66,10 @@ export default class App extends Component<{}> {
               </Text>
               <DatePicker
                style={{width: 300}}
-               date={"2018-01-30"}
+               date={this.state.startDate}
                mode="date"
                format="YYYY-MM-DD"
-               minDate="2018-01-30"
+               minDate={this.state.startDate}
                maxDate="2019-12-31"
                confirmBtnText="Confirm"
                cancelBtnText="Cancel"
@@ -79,7 +84,7 @@ export default class App extends Component<{}> {
                    marginLeft: 100,
                  }
                }}
-               onDateChange={(date) => {this.setState({date: date})}}
+               onDateChange={(date) => {this.setState({startDate: date})}}
                />
             </View>
             <Text
@@ -88,10 +93,10 @@ export default class App extends Component<{}> {
             </Text>
             <DatePicker
              style={{width: 300}}
-             date={"2018-01-30"}
+             date={this.state.endDate}
              mode="date"
              format="YYYY-MM-DD"
-             minDate="2018-01-30"
+             minDate={this.state.endDate}
              maxDate="2019-12-31"
              confirmBtnText="Confirm"
              cancelBtnText="Cancel"
@@ -106,11 +111,15 @@ export default class App extends Component<{}> {
                  marginLeft: 100,
                }
              }}
-             onDateChange={(date) => {this.setState({date: date})}}
+             onDateChange={(date) => {this.setState({endDate: date})}}
              />
              <View style = {styles.popupButtonView} >
              <Button
-             onPress={()=>{this.addNewGoalPopup.dismiss();}}
+             onPress={()=>{
+               this.storeGoal(this.state.startDate);
+               this.storeGoal(this.state.endDate);
+               this.addNewGoalPopup.dismiss();
+             }}
              title="Submit"
              color="#42a1f4"
              />
