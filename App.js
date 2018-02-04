@@ -51,8 +51,14 @@ export default class App extends Component<{}> {
           <FAB buttonColor="blue" visible={true} onClickAction={()=>{this.addNewGoalPopup.show();}}/>
           <PopupDialog ref = {(addNewGoalPopup) => { this.addNewGoalPopup = addNewGoalPopup;}}>
             <View>
-              <Text style = {styles.popupTextHeader}> Add a new goal. </Text>
-              <Text style = {styles.popupText}> Choose your start date. </Text>
+              <Text
+              style = {styles.popupTextHeader}>
+              Add a new goal.
+              </Text>
+              <Text
+              style = {styles.popupText}>
+              Choose your start date.
+              </Text>
               <DatePicker
                style={{width: 300}}
                date={"2018-01-30"}
@@ -76,7 +82,10 @@ export default class App extends Component<{}> {
                onDateChange={(date) => {this.setState({date: date})}}
                />
             </View>
-            <Text style = {styles.popupText}> Choose your end date. </Text>
+            <Text
+            style = {styles.popupText}>
+            Choose your end date.
+            </Text>
             <DatePicker
              style={{width: 300}}
              date={"2018-01-30"}
@@ -130,7 +139,7 @@ const styles = StyleSheet.create({
     padding: 25,
   },
   popupTextHeader: {
-    fontSize: 24,
+    fontSize: 20,
     marginTop: 24,
     textAlign: 'center',
   },
