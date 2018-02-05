@@ -19,24 +19,26 @@ import {
 } from 'react-native';
 
 export default class App extends Component<{}> {
-
-
   constructor(props){
     super(props)
-    this.state = {startDate:"2018-02-03", endDate: "2018-02-03" };
+    this.state = {startDate:"2018-02-03", endDate: "2018-02-03", testGoal: "Test Goal #1" };
+    this.retrieveGoal();
   }
   async storeGoal(goal) {
     try{
-      await AsyncStorage.setItem('Test Goal', goal);
+      await AsyncStorage.setItem("Test Goal", goal);
     } catch (error) {
       console.log(error.message);
     }
   }
 
-  async retrieveGoal(key) {
+  async retrieveGoal() {
     try {
-      value = await AsyncStorage.getItem('Test Goal');
-      return value;
+      const item = await AsyncStorage.getItem("Test Goal");
+      if (item) {
+        this.setState({testGoal: item});
+        console.log('Goal successfully retrieved.');
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -46,7 +48,7 @@ export default class App extends Component<{}> {
       <View style={styles.container}>
       <SectionList
         sections = {[
-          {title: 'Short-term', data: ['Goal #1']},
+          {title: 'Short-term', data: [this.state.testGoal]},
           {title: 'Medium-term', data: ['Goal #2']},
           {title: 'Long-term', data: ['Goal #3']},
           ]}
@@ -116,7 +118,7 @@ export default class App extends Component<{}> {
              <View style = {styles.popupButtonView} >
              <Button
              onPress={()=>{
-               this.storeGoal(this.state.startDate);
+               // this.storeGoal(this.state.startDate);
                this.storeGoal(this.state.endDate);
                this.addNewGoalPopup.dismiss();
              }}
