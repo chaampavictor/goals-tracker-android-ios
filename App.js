@@ -21,22 +21,25 @@ import {
 export default class App extends Component<{}> {
   constructor(props){
     super(props)
-    this.state = {startDate:"2018-02-03", endDate: "2018-02-03", testGoal: "Test Goal #1" };
-    this.retrieveGoal();
+    this.state = {startDate:"2018-02-03", endDate: "2018-02-03", shortTermGoals: ["SG 1"], midTermGoals: ["MT 1"], longTermGoals: ["LT1"]};
+    this.retrieveGoals();
   }
-  async storeGoal(goal) {
+  async storeGoal(category, goal) {
     try{
-      await AsyncStorage.setItem("Test Goal", goal);
+      await AsyncStorage.setItem(category, JSON.stringify(goal));
     } catch (error) {
       console.log(error.message);
     }
   }
 
-  async retrieveGoal() {
+  async retrieveGoals() {
     try {
-      const item = await AsyncStorage.getItem("Test Goal");
-      if (item) {
-        this.setState({testGoal: item});
+      const result = await AsyncStorage.getItem("Short-term");
+      const shortTermGoals = JSON.parse(result);
+      // const midTermGoals = await AsyncStorage.getItem("Mid-term");
+      // const longTermGoals = await AsyncStorage.getItem("Long-term");
+      if (shortTermGoals) {
+        this.setState({shortTermGoals: shortTermGoals});
         console.log('Goal successfully retrieved.');
       }
     } catch (error) {
@@ -48,7 +51,7 @@ export default class App extends Component<{}> {
       <View style={styles.container}>
       <SectionList
         sections = {[
-          {title: 'Short-term', data: [this.state.testGoal]},
+          {title: 'Short-term', data: this.state.shortTermGoals},
           {title: 'Medium-term', data: ['Goal #2']},
           {title: 'Long-term', data: ['Goal #3']},
           ]}
@@ -119,7 +122,7 @@ export default class App extends Component<{}> {
              <Button
              onPress={()=>{
                // this.storeGoal(this.state.startDate);
-               this.storeGoal(this.state.endDate);
+               this.storeGoal("Short-term", [this.state.endDate]);
                this.addNewGoalPopup.dismiss();
              }}
              title="Submit"
