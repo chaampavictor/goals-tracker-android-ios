@@ -17,11 +17,11 @@ import {
   View,
   Button
 } from 'react-native';
-
+import moment from 'moment';
 export default class App extends Component<{}> {
   constructor(props){
     super(props)
-    this.state = {startDate:"2018-02-03", endDate: "2018-02-03", shortTermGoals: ["SG 1"], midTermGoals: ["MT 1"], longTermGoals: ["LT1"]};
+    this.state = {startDate:"2018-02-03", endDate: "2018-02-03", shortTermGoals: ["SG 1"], midTermGoals: ["MT 1"], longTermGoals: ["LT 1"]};
     this.retrieveGoals();
   }
   async storeGoal(category, goal) {
@@ -34,13 +34,23 @@ export default class App extends Component<{}> {
 
   async retrieveGoals() {
     try {
-      const result = await AsyncStorage.getItem("Short-term");
+      var result = await AsyncStorage.getItem("Short-term");
       const shortTermGoals = JSON.parse(result);
-      // const midTermGoals = await AsyncStorage.getItem("Mid-term");
-      // const longTermGoals = await AsyncStorage.getItem("Long-term");
+      result = await AsyncStorage.getItem("Mid-term");
+      const midTermGoals = JSON.parse(result);
+      result = await AsyncStorage.getItem("Long-term");
+      const longTermGoals = JSON.parse(result);
       if (shortTermGoals) {
         this.setState({shortTermGoals: shortTermGoals});
-        console.log('Goal successfully retrieved.');
+        console.log('ST goals successfully retrieved.');
+      }
+      if (midTermGoals) {
+        this.setState({midTermGoals: midTermGoals});
+        console.log('MT goals successfully retrieved.');
+      }
+      if (longTermGoals) {
+        this.setState({longTermGoals: longTermGoals});
+        console.log('LT goals successfully retrieved.');
       }
     } catch (error) {
       console.log(error.message);
@@ -52,8 +62,8 @@ export default class App extends Component<{}> {
       <SectionList
         sections = {[
           {title: 'Short-term', data: this.state.shortTermGoals},
-          {title: 'Medium-term', data: ['Goal #2']},
-          {title: 'Long-term', data: ['Goal #3']},
+          {title: 'Medium-term', data: this.state.midTermGoals},
+          {title: 'Long-term', data: this.state.longTermGoals},
           ]}
           renderItem = {({item}) => <Text style = {styles.mainListViewRow}> {item} </Text> }
           renderSectionHeader = {({section}) => <Text style = {styles.mainListViewHeader}> {section.title} </Text>}
@@ -121,8 +131,19 @@ export default class App extends Component<{}> {
              <View style = {styles.popupButtonView} >
              <Button
              onPress={()=>{
-               // this.storeGoal(this.state.startDate);
-               this.storeGoal("Short-term", [this.state.endDate]);
+               const startDate = moment(this.state.startDate);
+               const endDate = moment(this.state.endDate);
+               const difference = endDate.diff(startDate, "days");
+               if (difference > 0 && difference < 30) {
+                 //Short-term Goals
+                 this.storeGoal("Short-term", [this.state.endDate]);
+               } else if (difference >= 30 && difference < 90) {
+                 //Mid-term Goals
+                 this.storeGoal("Mid-term", [this.state.endDate]);
+               } else {
+                 //Long-term Goals
+                 this.storeGoal("Long-term", [this.state.endDate]);
+               }
                this.addNewGoalPopup.dismiss();
              }}
              title="Submit"
