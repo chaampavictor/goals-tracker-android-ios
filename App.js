@@ -21,7 +21,8 @@ import moment from 'moment';
 export default class App extends Component<{}> {
   constructor(props){
     super(props)
-    this.state = {startDate:"2018-02-03", endDate: "2018-02-03", shortTermGoals: ["SG 1"], midTermGoals: ["MT 1"], longTermGoals: ["LT 1"]};
+    const currentDate = new Date();
+    this.state = {startDate:currentDate.toString(), endDate: currentDate.toString(), shortTermGoals: ["SG 1"], midTermGoals: ["MT 1"], longTermGoals: ["LT 1"]};
     this.retrieveGoals();
   }
   async storeGoal(category, goal) {
