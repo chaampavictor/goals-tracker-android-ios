@@ -22,7 +22,8 @@ export default class App extends Component<{}> {
   constructor(props){
     super(props)
     const currentDate = new Date();
-    this.state = {startDate:currentDate.toString(), endDate: currentDate.toString(), shortTermGoals: ["SG 1"], midTermGoals: ["MT 1"], longTermGoals: ["LT 1"]};
+    console.log(currentDate.toString());
+    this.state = {startDate:moment(currentDate).format('YYYY-MM-DD').toString(), endDate: moment(currentDate).format('YYYY-MM-DD').toString(), shortTermGoals: ["SG 1"], midTermGoals: ["MT 1"], longTermGoals: ["LT 1"]};
     this.retrieveGoals();
   }
   async storeGoal(category, goal) {
@@ -57,6 +58,7 @@ export default class App extends Component<{}> {
       console.log(error.message);
     }
   }
+
   render() {
     return (
       <View style={styles.container}>
