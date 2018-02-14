@@ -22,6 +22,7 @@ export default class App extends Component<{}> {
   constructor(props){
     super(props)
     const currentDate = new Date();
+    // AsyncStorage.clear();
     console.log(currentDate.toString());
     this.state = {startDate:moment(currentDate).format('YYYY-MM-DD').toString(), endDate: moment(currentDate).format('YYYY-MM-DD').toString(), shortTermGoals: ["SG 1"], midTermGoals: ["MT 1"], longTermGoals: ["LT 1"]};
     this.retrieveGoals();
@@ -43,20 +44,46 @@ export default class App extends Component<{}> {
       result = await AsyncStorage.getItem("Long-term");
       const longTermGoals = JSON.parse(result);
       if (shortTermGoals) {
-        this.setState({shortTermGoals: shortTermGoals});
-        console.log('ST goals successfully retrieved.');
+        var goals = [];
+        if(Array.isArray(shortTermGoals)){
+          console.log("is array");
+        }
+        var shortGoals = JSON.parse(shortTermGoals);
+        //for (goal in shortGoals) is wrong, goal = "0"
+        for (var i = 0; i < shortGoals.length; i ++){
+          goals.push(shortGoals[i].startDate);
+          // console.log("start date:" + goal.startDate);
+        }
+        this.setState({shortTermGoals: goals});
       }
       if (midTermGoals) {
         this.setState({midTermGoals: midTermGoals});
-        console.log('MT goals successfully retrieved.');
       }
       if (longTermGoals) {
         this.setState({longTermGoals: longTermGoals});
-        console.log('LT goals successfully retrieved.');
       }
     } catch (error) {
       console.log(error.message);
     }
+  }
+
+  async retrieveItem(name) {
+    try{
+      console.log("item being retrieved.")
+      const retrievedItem =  await AsyncStorage.getItem(name);
+      var newitem = await JSON.parse(retrievedItem);
+      var item = await JSON.parse(newitem);
+      return item;
+      // if(Array.isArray(retrievedItem)) {
+      //   var newitem = JSON.parse(retrievedItem);
+      //   return newitem;
+      // } else {
+      //   console.log("item not retrieved.")
+      // }
+    } catch (error) {
+      console.log(error.message);
+    }
+    return
   }
 
   render() {
@@ -134,19 +161,39 @@ export default class App extends Component<{}> {
              <View style = {styles.popupButtonView} >
              <Button
              onPress={()=>{
-               const startDate = moment(this.state.startDate);
-               const endDate = moment(this.state.endDate);
-               const difference = endDate.diff(startDate, "days");
-               if (difference > 0 && difference < 30) {
-                 //Short-term Goals
-                 this.storeGoal("Short-term", [this.state.endDate]);
-               } else if (difference >= 30 && difference < 90) {
-                 //Mid-term Goals
-                 this.storeGoal("Mid-term", [this.state.endDate]);
-               } else {
-                 //Long-term Goals
-                 this.storeGoal("Long-term", [this.state.endDate]);
-               }
+               var goal = new Goal();
+               goal.startDate = this.state.startDate;
+               goal.endDate = this.state.endDate;
+               goal.description = "description has been set.";
+               this.retrieveItem("Short-term").then((goals) => {
+                 if(goals) {
+                   if (Array.isArray(goals)) {
+                     goals.push(goal);
+                     this.storeGoal("Short-term", JSON.stringify(goals));
+                   } else {
+                     var newGoals = [];
+                     newGoals.push(goal);
+                     var jsonversion = JSON.stringify(newGoals);
+                     this.storeGoal("Short-term", jsonversion);
+                   }
+                 } else {
+
+                 }
+               });
+
+               // const startDate = moment(this.state.startDate);
+               // const endDate = moment(this.state.endDate);
+               // const difference = endDate.diff(startDate, "days");
+               // if (difference > 0 && difference < 30) {
+               //   //Short-term Goals
+               //   this.storeGoal("Short-term", [this.state.endDate]);
+               // } else if (difference >= 30 && difference < 90) {
+               //   //Mid-term Goals
+               //   this.storeGoal("Mid-term", [this.state.endDate]);
+               // } else {
+               //   //Long-term Goals
+               //   this.storeGoal("Long-term", [this.state.endDate]);
+               // }
                this.addNewGoalPopup.dismiss();
              }}
              title="Submit"
@@ -159,6 +206,11 @@ export default class App extends Component<{}> {
   }
 }
 
+var Goal = function () {
+  this.startDate = "No Date";
+  this.endDate = "No Date";
+  this.description = "No description";
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
