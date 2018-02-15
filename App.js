@@ -22,8 +22,6 @@ export default class App extends Component<{}> {
   constructor(props){
     super(props)
     const currentDate = new Date();
-    // AsyncStorage.clear();
-    console.log(currentDate.toString());
     this.state = {startDate:moment(currentDate).format('YYYY-MM-DD').toString(), endDate: moment(currentDate).format('YYYY-MM-DD').toString(), shortTermGoals: ["SG 1"], midTermGoals: ["MT 1"], longTermGoals: ["LT 1"]};
     this.retrieveGoals();
   }
@@ -62,7 +60,6 @@ export default class App extends Component<{}> {
 
   async retrieveItem(name) {
     try{
-      console.log("item being retrieved.")
       const retrievedItem =  await AsyncStorage.getItem(name);
       var newitem = await JSON.parse(retrievedItem);
       var item = await JSON.parse(newitem);
@@ -174,20 +171,6 @@ export default class App extends Component<{}> {
                      this.storeGoal(goalCategory, jsonversion);
                    }
                });
-
-               // const startDate = moment(this.state.startDate);
-               // const endDate = moment(this.state.endDate);
-               // const difference = endDate.diff(startDate, "days");
-               // if (difference > 0 && difference < 30) {
-               //   //Short-term Goals
-               //   this.storeGoal("Short-term", [this.state.endDate]);
-               // } else if (difference >= 30 && difference < 90) {
-               //   //Mid-term Goals
-               //   this.storeGoal("Mid-term", [this.state.endDate]);
-               // } else {
-               //   //Long-term Goals
-               //   this.storeGoal("Long-term", [this.state.endDate]);
-               // }
                this.addNewGoalPopup.dismiss();
              }}
              title="Submit"
