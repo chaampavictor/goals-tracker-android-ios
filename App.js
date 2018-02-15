@@ -44,29 +44,16 @@ export default class App extends Component<{}> {
       result = await AsyncStorage.getItem("Long-term");
       const longTermGoals = JSON.parse(result);
       if (shortTermGoals) {
-        // var goals = [];
         //for some reason we need to do a double parse
         var shortGoals = JSON.parse(shortTermGoals);
-        //for (goal in shortGoals) is wrong, goal = "0"
-        // for (var i = 0; i < shortGoals.length; i ++){
-        //   goals.push(shortGoals[i].startDate);
-        // }
         this.setState({shortTermGoals: shortGoals});
       }
       if (midTermGoals) {
-        var goals = [];
         var midTermGoals = JSON.parse(midTermGoals);
-        for (var i = 0; i < midTermGoals.length; i ++){
-          goals.push(midTermGoals[i].startDate);
-        }
         this.setState({midTermGoals: midTermGoals});
       }
       if (longTermGoals) {
-        var goals = [];
         var longTermGoals = JSON.parse(longTermGoals);
-        for (var i = 0; i < longTermGoals.length; i ++){
-          goals.push(longTermGoals[i].startDate);
-        }
         this.setState({longTermGoals: longTermGoals});      }
     } catch (error) {
       console.log(error.message);
@@ -80,12 +67,6 @@ export default class App extends Component<{}> {
       var newitem = await JSON.parse(retrievedItem);
       var item = await JSON.parse(newitem);
       return item;
-      // if(Array.isArray(retrievedItem)) {
-      //   var newitem = JSON.parse(retrievedItem);
-      //   return newitem;
-      // } else {
-      //   console.log("item not retrieved.")
-      // }
     } catch (error) {
       console.log(error.message);
     }
