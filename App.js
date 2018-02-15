@@ -44,24 +44,30 @@ export default class App extends Component<{}> {
       result = await AsyncStorage.getItem("Long-term");
       const longTermGoals = JSON.parse(result);
       if (shortTermGoals) {
-        var goals = [];
-        if(Array.isArray(shortTermGoals)){
-          console.log("is array");
-        }
+        // var goals = [];
+        //for some reason we need to do a double parse
         var shortGoals = JSON.parse(shortTermGoals);
         //for (goal in shortGoals) is wrong, goal = "0"
-        for (var i = 0; i < shortGoals.length; i ++){
-          goals.push(shortGoals[i].startDate);
-          // console.log("start date:" + goal.startDate);
-        }
-        this.setState({shortTermGoals: goals});
+        // for (var i = 0; i < shortGoals.length; i ++){
+        //   goals.push(shortGoals[i].startDate);
+        // }
+        this.setState({shortTermGoals: shortGoals});
       }
       if (midTermGoals) {
+        var goals = [];
+        var midTermGoals = JSON.parse(midTermGoals);
+        for (var i = 0; i < midTermGoals.length; i ++){
+          goals.push(midTermGoals[i].startDate);
+        }
         this.setState({midTermGoals: midTermGoals});
       }
       if (longTermGoals) {
-        this.setState({longTermGoals: longTermGoals});
-      }
+        var goals = [];
+        var longTermGoals = JSON.parse(longTermGoals);
+        for (var i = 0; i < longTermGoals.length; i ++){
+          goals.push(longTermGoals[i].startDate);
+        }
+        this.setState({longTermGoals: longTermGoals});      }
     } catch (error) {
       console.log(error.message);
     }
@@ -95,7 +101,7 @@ export default class App extends Component<{}> {
           {title: 'Medium-term', data: this.state.midTermGoals},
           {title: 'Long-term', data: this.state.longTermGoals},
           ]}
-          renderItem = {({item}) => <Text style = {styles.mainListViewRow}> {item} </Text> }
+          renderItem = {({item}) => <Text style = {styles.mainListViewRow}> {item.startDate} {item.endDate} {item.description} </Text> }
           renderSectionHeader = {({section}) => <Text style = {styles.mainListViewHeader}> {section.title} </Text>}
           keyExtractor = {(item, index) => index} />
           <FAB buttonColor="blue" visible={true} onClickAction={()=>{this.addNewGoalPopup.show();}}/>
@@ -162,23 +168,30 @@ export default class App extends Component<{}> {
              <Button
              onPress={()=>{
                var goal = new Goal();
+               var goalCategory = "";
                goal.startDate = this.state.startDate;
                goal.endDate = this.state.endDate;
                goal.description = "description has been set.";
-               this.retrieveItem("Short-term").then((goals) => {
-                 if(goals) {
+               const startDate = moment(this.state.startDate);
+               const endDate = moment(this.state.endDate);
+               const difference = endDate.diff(startDate, "days");
+               if (difference > 0 && difference < 30) {
+                 goalCategory = "Short-term";
+               } else if (difference >= 30 && difference < 90) {
+                 goalCategory = "Mid-term";
+               } else {
+                 goalCategory = "Long-term";
+               }
+               this.retrieveItem(goalCategory).then((goals) => {
                    if (Array.isArray(goals)) {
                      goals.push(goal);
-                     this.storeGoal("Short-term", JSON.stringify(goals));
+                     this.storeGoal(goalCategory, JSON.stringify(goals));
                    } else {
                      var newGoals = [];
                      newGoals.push(goal);
                      var jsonversion = JSON.stringify(newGoals);
-                     this.storeGoal("Short-term", jsonversion);
+                     this.storeGoal(goalCategory, jsonversion);
                    }
-                 } else {
-
-                 }
                });
 
                // const startDate = moment(this.state.startDate);
