@@ -35,24 +35,21 @@ export default class App extends Component<{}> {
 
   async retrieveGoals() {
     try {
-      var result = await AsyncStorage.getItem("Short-term");
-      const shortTermGoals = JSON.parse(result);
-      result = await AsyncStorage.getItem("Mid-term");
-      const midTermGoals = JSON.parse(result);
-      result = await AsyncStorage.getItem("Long-term");
-      const longTermGoals = JSON.parse(result);
-      if (shortTermGoals) {
-        //for some reason we need to do a double parse
-        var shortGoals = JSON.parse(shortTermGoals);
-        this.setState({shortTermGoals: shortGoals});
-      }
-      if (midTermGoals) {
-        var midTermGoals = JSON.parse(midTermGoals);
-        this.setState({midTermGoals: midTermGoals});
-      }
-      if (longTermGoals) {
-        var longTermGoals = JSON.parse(longTermGoals);
-        this.setState({longTermGoals: longTermGoals});      }
+      this.retrieveItem("Short-term").then((goals) => {
+        if (goals) {
+          this.setState({shortTermGoals: goals});
+        }
+      });
+      this.retrieveItem("Mid-term").then((goals) => {
+        if (goals) {
+          this.setState({midTermGoals: goals});
+        }
+      });
+      this.retrieveItem("Long-term").then((goals) => {
+        if (goals) {
+          this.setState({longTermGoals: goals});
+        }
+      });
     } catch (error) {
       console.log(error.message);
     }
