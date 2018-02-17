@@ -58,8 +58,7 @@ export default class App extends Component<{}> {
   async retrieveItem(name) {
     try{
       const retrievedItem =  await AsyncStorage.getItem(name);
-      var newitem = await JSON.parse(retrievedItem);
-      var item = await JSON.parse(newitem);
+      const item = JSON.parse(retrievedItem);
       return item;
     } catch (error) {
       console.log(error.message);
@@ -160,11 +159,11 @@ export default class App extends Component<{}> {
                this.retrieveItem(goalCategory).then((goals) => {
                    if (Array.isArray(goals)) {
                      goals.push(goal);
-                     this.storeGoal(goalCategory, JSON.stringify(goals));
+                     this.storeGoal(goalCategory, goals);
                    } else {
                      var newGoals = [];
                      newGoals.push(goal);
-                     var jsonversion = JSON.stringify(newGoals);
+                     var jsonversion = newGoals;
                      this.storeGoal(goalCategory, jsonversion);
                    }
                });
