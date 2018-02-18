@@ -25,9 +25,9 @@ export default class App extends Component<{}> {
     this.state = {startDate:moment(currentDate).format('YYYY-MM-DD').toString(), endDate: moment(currentDate).format('YYYY-MM-DD').toString(), shortTermGoals: ["SG 1"], midTermGoals: ["MT 1"], longTermGoals: ["LT 1"]};
     this.retrieveGoals();
   }
-  async storeItem(category, item) {
+  async storeItem(key, item) {
     try{
-        var jsonOfItem = await AsyncStorage.setItem(category, JSON.stringify(item));
+        var jsonOfItem = await AsyncStorage.setItem(key, JSON.stringify(item));
         return jsonOfItem;
     } catch (error) {
       console.log(error.message);
@@ -56,9 +56,9 @@ export default class App extends Component<{}> {
     }
   }
 
-  async retrieveItem(name) {
+  async retrieveItem(key) {
     try{
-      const retrievedItem =  await AsyncStorage.getItem(name);
+      const retrievedItem =  await AsyncStorage.getItem(key);
       const item = JSON.parse(retrievedItem);
       return item;
     } catch (error) {
