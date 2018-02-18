@@ -8,6 +8,7 @@ import React, { Component } from 'react';
 import PopupDialog from 'react-native-popup-dialog';
 import DatePicker from 'react-native-datepicker'
 import FAB from 'react-native-fab';
+import * as Progress from 'react-native-progress';
 import {
   AsyncStorage,
   Platform,
@@ -76,7 +77,32 @@ export default class App extends Component<{}> {
           {title: 'Medium-term', data: this.state.midTermGoals},
           {title: 'Long-term', data: this.state.longTermGoals},
           ]}
-          renderItem = {({item}) => <Text style = {styles.mainListViewRow}> {item.startDate} {item.endDate} {item.description} </Text> }
+          renderItem = {({item}) =>
+          <View style={{
+            flexDirection: 'row',
+          }}>
+          <View style = {{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+          }}>
+          <Text style = {styles.mainListViewRow}>{item.startDate + " to " + item.endDate}</Text>
+          </View>
+          <View style ={{
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          <View style ={{
+            flexDirection: 'row',
+            height: 8,
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+          }}>
+          <Progress.Bar progress={0.2} width={60} />
+          </View>
+          </View>
+          </View>
+          }
           renderSectionHeader = {({section}) => <Text style = {styles.mainListViewHeader}> {section.title} </Text>}
           keyExtractor = {(item, index) => index} />
           <FAB buttonColor="blue" visible={true} onClickAction={()=>{this.addNewGoalPopup.show();}}/>
@@ -193,12 +219,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
   mainListViewRow: {
-    fontSize: 24,
+    fontSize: 12,
     textAlign: 'center',
-    padding: 15,
+    padding: 10,
   },
   mainListViewHeader: {
-    fontSize: 40,
+    fontSize: 28,
     textAlign: 'left',
     padding: 25,
   },
