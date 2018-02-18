@@ -25,9 +25,10 @@ export default class App extends Component<{}> {
     this.state = {startDate:moment(currentDate).format('YYYY-MM-DD').toString(), endDate: moment(currentDate).format('YYYY-MM-DD').toString(), shortTermGoals: ["SG 1"], midTermGoals: ["MT 1"], longTermGoals: ["LT 1"]};
     this.retrieveGoals();
   }
-  async storeGoal(category, goal) {
+  async storeItem(category, item) {
     try{
-      await AsyncStorage.setItem(category, JSON.stringify(goal));
+        var jsonOfItem = await AsyncStorage.setItem(category, JSON.stringify(item));
+        return jsonOfItem;
     } catch (error) {
       console.log(error.message);
     }
@@ -159,12 +160,12 @@ export default class App extends Component<{}> {
                this.retrieveItem(goalCategory).then((goals) => {
                    if (Array.isArray(goals)) {
                      goals.push(goal);
-                     this.storeGoal(goalCategory, goals);
+                     this.storeItem(goalCategory, goals);
                    } else {
                      var newGoals = [];
                      newGoals.push(goal);
                      var jsonversion = newGoals;
-                     this.storeGoal(goalCategory, jsonversion);
+                     this.storeItem(goalCategory, jsonversion);
                    }
                });
                this.addNewGoalPopup.dismiss();
