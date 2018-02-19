@@ -16,14 +16,21 @@ import {
   SectionList,
   Text,
   View,
-  Button
+  Button,
+  TextInput
 } from 'react-native';
 import moment from 'moment';
 export default class App extends Component<{}> {
   constructor(props){
     super(props)
     const currentDate = new Date();
-    this.state = {startDate:moment(currentDate).format('YYYY-MM-DD').toString(), endDate: moment(currentDate).format('YYYY-MM-DD').toString(), shortTermGoals: [], midTermGoals: [], longTermGoals: []};
+    this.state = {startDate:moment(currentDate).format('YYYY-MM-DD').toString(),
+                    endDate: moment(currentDate).format('YYYY-MM-DD').toString(),
+                    shortTermGoals: [],
+                    midTermGoals: [],
+                    longTermGoals: [],
+                    mostCurrentGoalShortDescription: "",
+                    mostCurrentGoalLongDescription: ""};
     this.retrieveGoals();
   }
 
@@ -66,21 +73,58 @@ export default class App extends Component<{}> {
           keyExtractor = {(item, index) => index} />
           <FAB buttonColor="blue" visible={true} onClickAction={()=>{this.addNewGoalPopup.show();}}/>
           <PopupDialog ref = {(addNewGoalPopup) => { this.addNewGoalPopup = addNewGoalPopup;}}>
-            <View>
-              <Text
-              style = {styles.popupTextHeader}>
-              Add a new goal.
-              </Text>
+              <View style = {{
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'flex-start',
+              }}>
+                <View style = {{
+                  flex: 2,
+                  flexDirection: 'column',
+                  justifyContent: 'flex-start',
+                }}>
+                <Text
+                style = {styles.popupText}>
+                Choose your start date.
+                </Text>
+                <DatePicker
+                 style={{width: 300}}
+                 date={this.state.startDate}
+                 mode="date"
+                 format="YYYY-MM-DD"
+                 minDate={this.state.startDate}
+                 maxDate="2019-12-31"
+                 confirmBtnText="Confirm"
+                 cancelBtnText="Cancel"
+                 customStyles={{
+                   dateIcon: {
+                     position: 'absolute',
+                     top: 16,
+                     left: 40,
+                   },
+                   dateInput: {
+                     top: 16,
+                     marginLeft: 100,
+                   }
+                 }}
+                 onDateChange={(date) => {this.setState({startDate: date})}}
+                 />
+              </View>
+              <View style = {{
+                flex: 2,
+                flexDirection: 'column',
+                justifyContent: 'flex-start',
+              }}>
               <Text
               style = {styles.popupText}>
-              Choose your start date.
+              Choose your end date.
               </Text>
               <DatePicker
                style={{width: 300}}
-               date={this.state.startDate}
+               date={this.state.endDate}
                mode="date"
                format="YYYY-MM-DD"
-               minDate={this.state.startDate}
+               minDate={this.state.endDate}
                maxDate="2019-12-31"
                confirmBtnText="Confirm"
                cancelBtnText="Cancel"
@@ -95,66 +139,60 @@ export default class App extends Component<{}> {
                    marginLeft: 100,
                  }
                }}
-               onDateChange={(date) => {this.setState({startDate: date})}}
+               onDateChange={(date) => {this.setState({endDate: date})}}
                />
-            </View>
-            <Text
-            style = {styles.popupText}>
-            Choose your end date.
-            </Text>
-            <DatePicker
-             style={{width: 300}}
-             date={this.state.endDate}
-             mode="date"
-             format="YYYY-MM-DD"
-             minDate={this.state.endDate}
-             maxDate="2019-12-31"
-             confirmBtnText="Confirm"
-             cancelBtnText="Cancel"
-             customStyles={{
-               dateIcon: {
-                 position: 'absolute',
-                 top: 16,
-                 left: 40,
-               },
-               dateInput: {
-                 top: 16,
-                 marginLeft: 100,
-               }
-             }}
-             onDateChange={(date) => {this.setState({endDate: date})}}
-             />
-             <View style = {styles.popupButtonView} >
-             <Button
-             onPress={()=>{
-               var goal = new Goal(this.state.startDate, this.state.endDate, "Short Description","Long Description", 0.0);
-               var goalCategory = "";
-               const startDate = moment(this.state.startDate);
-               const endDate = moment(this.state.endDate);
-               const difference = endDate.diff(startDate, "days");
-               if (difference > 0 && difference < 30) {
-                 goalCategory = "Short-term";
-               } else if (difference >= 30 && difference < 90) {
-                 goalCategory = "Mid-term";
-               } else {
-                 goalCategory = "Long-term";
-               }
-               this.retrieveItem(goalCategory).then((goals) => {
-                   if (Array.isArray(goals)) {
-                     goals.push(goal);
-                     this.storeItem(goalCategory, goals);
-                   } else {
-                     var newGoals = [];
-                     newGoals.push(goal);
-                     var jsonversion = newGoals;
-                     this.storeItem(goalCategory, jsonversion);
-                   }
-               });
-               this.addNewGoalPopup.dismiss();
-             }}
-             title="Submit"
-             color="#42a1f4"
-             />
+               </View>
+               <View style = {{
+                 flex: 2,
+                 flexDirection: 'column',
+                 justifyContent: 'flex-start',
+                 alignItems: 'center',
+               }}>
+               <TextInput style = {{
+                 marginTop: 10,
+               }}
+                onChangeText={(text) => this.setState({mostCurrentGoalShortDescription: text})}
+                placeholder = "Enter your goal title here."
+               />
+                <TextInput style = {{
+                  marginTop: 10,
+                }}
+                  onChangeText={(text) => this.setState({mostCurrentGoalLongDescription: text})}
+                  placeholder = "Enter your goal description here."
+                />
+               </View>
+               <View style = {styles.popupButtonView} >
+               <Button
+               onPress={()=>{
+                 var goal = new Goal(this.state.startDate, this.state.endDate, this.state.mostCurrentGoalShortDescription,this.state.mostCurrentGoalLongDescription, 0.0);
+                 var goalCategory = "";
+                 const startDate = moment(this.state.startDate);
+                 const endDate = moment(this.state.endDate);
+                 const difference = endDate.diff(startDate, "days");
+                 if (difference > 0 && difference < 30) {
+                   goalCategory = "Short-term";
+                 } else if (difference >= 30 && difference < 90) {
+                   goalCategory = "Mid-term";
+                 } else {
+                   goalCategory = "Long-term";
+                 }
+                 this.retrieveItem(goalCategory).then((goals) => {
+                     if (Array.isArray(goals)) {
+                       goals.push(goal);
+                       this.storeItem(goalCategory, goals);
+                     } else {
+                       var newGoals = [];
+                       newGoals.push(goal);
+                       var jsonversion = newGoals;
+                       this.storeItem(goalCategory, jsonversion);
+                     }
+                 });
+                 this.addNewGoalPopup.dismiss();
+               }}
+               title="Submit"
+               color="#42a1f4"
+               />
+               </View>
              </View>
           </PopupDialog>
       </View>
@@ -187,36 +225,36 @@ async retrieveGoals() {
     }).catch((error) => {
             console.log('Promise is rejected with error: ' + error);
         });
-    this.retrieveItem("Mid-term").then((goals) => {
-      if (goals) {
-        var index = 0;
-        goals.forEach(function (goal)
-        {
-          var updatedGoal = new Goal(goal.startDate, goal.endDate, goal.shortDescription, goal.longDescription, goal.percentageDaysPassed);
-          updatedGoal.updatePercentageDaysPassed();
-          goals[index] = updatedGoal;
-          index++;
-      });
-        this.setState({midTermGoals: goals});
-      }
-    }).catch((error) => {
-            console.log('Promise is rejected with error: ' + error);
-        });;
-    this.retrieveItem("Long-term").then((goals) => {
-      if (goals) {
-        var index = 0;
-        goals.forEach(function (goal)
-        {
-          var updatedGoal = new Goal(goal.startDate, goal.endDate, goal.shortDescription, goal.longDescription, goal.percentageDaysPassed);
-          updatedGoal.updatePercentageDaysPassed();
-          goals[index] = updatedGoal;
-          index++;
-      }).catch((error) => {
-              console.log('Promise is rejected with error: ' + error);
-          });;
-        this.setState({longTermGoals: goals});
-      }
-    });
+        this.retrieveItem("Mid-term").then((goals) => {
+          if (goals) {
+            var index = 0;
+            goals.forEach(function (goal)
+            {
+              var updatedGoal = new Goal(goal.startDate, goal.endDate, goal.shortDescription, goal.longDescription, goal.percentageDaysPassed);
+              updatedGoal.updatePercentageDaysPassed();
+              goals[index] = updatedGoal;
+              index++;
+          });
+            this.setState({midTermGoals: goals});
+          }
+        }).catch((error) => {
+                console.log('Promise is rejected with error: ' + error);
+            });
+            this.retrieveItem("Long-term").then((goals) => {
+              if (goals) {
+                var index = 0;
+                goals.forEach(function (goal)
+                {
+                  var updatedGoal = new Goal(goal.startDate, goal.endDate, goal.shortDescription, goal.longDescription, goal.percentageDaysPassed);
+                  updatedGoal.updatePercentageDaysPassed();
+                  goals[index] = updatedGoal;
+                  index++;
+              });
+                this.setState({longTermGoals: goals});
+              }
+            }).catch((error) => {
+                    console.log('Promise is rejected with error: ' + error);
+                });
   } catch (error) {
     console.log(error.message);
   }
@@ -283,7 +321,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   popupButtonView: {
+    flex: 1,
     justifyContent: 'center',
-    marginTop: 24,
   },
 });
