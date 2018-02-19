@@ -36,7 +36,7 @@ export default class App extends Component<{}> {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style = {styles.container} >
       <SectionList
         sections = {[
           {title: 'Short-term', data: this.state.shortTermGoals},
@@ -44,26 +44,12 @@ export default class App extends Component<{}> {
           {title: 'Long-term', data: this.state.longTermGoals},
           ]}
           renderItem = {({item}) =>
-          <View style={{
-            flexDirection: 'row',
-          }}>
-          <View style = {{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-          }}>
+          <View style= {styles.mainSectionListRow} >
+          <View style = {styles.mainSectionListRowGoalSummary} >
           <Text style = {styles.mainListViewRow}>{item.shortDescription + "\n" + item.startDate + " to " + item.endDate}</Text>
           </View>
-          <View style ={{
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
-          <View style ={{
-            flexDirection: 'row',
-            height: 8,
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-          }}>
+          <View style = {styles.mainSectionListRowProgressBarContainer} >
+          <View style = {styles.mainSectionListRowProgressBar} >
           <Progress.Bar progress={item.percentageDaysPassed} width={60} />
           </View>
           </View>
@@ -73,22 +59,14 @@ export default class App extends Component<{}> {
           keyExtractor = {(item, index) => index} />
           <FAB buttonColor="blue" visible={true} onClickAction={()=>{this.addNewGoalPopup.show();}}/>
           <PopupDialog ref = {(addNewGoalPopup) => { this.addNewGoalPopup = addNewGoalPopup;}}>
-              <View style = {{
-                flex: 1,
-                flexDirection: 'column',
-                justifyContent: 'flex-start',
-              }}>
-                <View style = {{
-                  flex: 2,
-                  flexDirection: 'column',
-                  justifyContent: 'flex-start',
-                }}>
+              <View style = {styles.addGoalPopup}>
+                <View style = {styles.addGoalPopupDatePickerContainer}>
                 <Text
                 style = {styles.popupText}>
                 Choose your start date.
                 </Text>
                 <DatePicker
-                 style={{width: 300}}
+                 style={styles.addGoalPopupDatePicker}
                  date={this.state.startDate}
                  mode="date"
                  format="YYYY-MM-DD"
@@ -110,17 +88,13 @@ export default class App extends Component<{}> {
                  onDateChange={(date) => {this.setState({startDate: date})}}
                  />
               </View>
-              <View style = {{
-                flex: 2,
-                flexDirection: 'column',
-                justifyContent: 'flex-start',
-              }}>
+              <View style = {styles.addGoalPopupDatePickerContainer}>
               <Text
               style = {styles.popupText}>
               Choose your end date.
               </Text>
               <DatePicker
-               style={{width: 300}}
+               style={styles.addGoalPopupDatePicker}
                date={this.state.endDate}
                mode="date"
                format="YYYY-MM-DD"
@@ -142,21 +116,12 @@ export default class App extends Component<{}> {
                onDateChange={(date) => {this.setState({endDate: date})}}
                />
                </View>
-               <View style = {{
-                 flex: 2,
-                 flexDirection: 'column',
-                 justifyContent: 'flex-start',
-                 alignItems: 'center',
-               }}>
-               <TextInput style = {{
-                 marginTop: 10,
-               }}
+               <View style = {styles.addGoalPopupDescriptionTextFieldsContainer}>
+               <TextInput style = {styles.addGoalPopupTextInput}
                 onChangeText={(text) => this.setState({mostCurrentGoalShortDescription: text})}
                 placeholder = "Enter your goal title here."
                />
-                <TextInput style = {{
-                  marginTop: 10,
-                }}
+                <TextInput style = {styles.addGoalPopupTextInput}
                   onChangeText={(text) => this.setState({mostCurrentGoalLongDescription: text})}
                   placeholder = "Enter your goal description here."
                 />
@@ -293,35 +258,76 @@ var Goal = function (startDate, endDate, longDescription, shortDescription, perc
     };
 
 }
+
 const styles = StyleSheet.create({
+  addGoalPopup: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+  },
+  addGoalPopupDatePickerContainer: {
+    flex: 2,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+  },
+  addGoalPopupDatePicker: {
+    width: 300
+  },
+  addGoalPopupDescriptionTextFieldsContainer: {
+    flex: 2,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  addGoalPopupTextInput: {
+    marginTop: 10,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
-  mainListViewRow: {
-    fontSize: 12,
-    textAlign: 'center',
-    padding: 10,
-  },
   mainListViewHeader: {
     fontSize: 28,
     textAlign: 'left',
     padding: 25,
   },
-  popupTextHeader: {
-    fontSize: 20,
-    marginTop: 24,
+  mainListViewRow: {
+    fontSize: 12,
     textAlign: 'center',
+    padding: 10,
+  },
+  mainSectionListRow: {
+    flexDirection: 'row',
+  },
+  mainSectionListRowGoalSummary: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
+  mainSectionListRowProgressBar: {
+    flexDirection: 'row',
+    height: 8,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  mainSectionListRowProgressBarContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  popupButtonView: {
+    flex: 1,
+    justifyContent: 'center',
   },
   popupText: {
     fontSize: 16,
     marginTop: 16,
     textAlign: 'center',
   },
-  popupButtonView: {
-    flex: 1,
-    justifyContent: 'center',
+  popupTextHeader: {
+    fontSize: 20,
+    marginTop: 24,
+    textAlign: 'center',
   },
 });
