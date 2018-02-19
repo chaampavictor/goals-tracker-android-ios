@@ -23,49 +23,8 @@ export default class App extends Component<{}> {
   constructor(props){
     super(props)
     const currentDate = new Date();
-    this.state = {startDate:moment(currentDate).format('YYYY-MM-DD').toString(), endDate: moment(currentDate).format('YYYY-MM-DD').toString(), shortTermGoals: ["SG 1"], midTermGoals: ["MT 1"], longTermGoals: ["LT 1"]};
+    this.state = {startDate:moment(currentDate).format('YYYY-MM-DD').toString(), endDate: moment(currentDate).format('YYYY-MM-DD').toString(), shortTermGoals: [], midTermGoals: [], longTermGoals: []};
     this.retrieveGoals();
-  }
-  async storeItem(key, item) {
-    try{
-        var jsonOfItem = await AsyncStorage.setItem(key, JSON.stringify(item));
-        return jsonOfItem;
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
-  async retrieveGoals() {
-    try {
-      this.retrieveItem("Short-term").then((goals) => {
-        if (goals) {
-          this.setState({shortTermGoals: goals});
-        }
-      });
-      this.retrieveItem("Mid-term").then((goals) => {
-        if (goals) {
-          this.setState({midTermGoals: goals});
-        }
-      });
-      this.retrieveItem("Long-term").then((goals) => {
-        if (goals) {
-          this.setState({longTermGoals: goals});
-        }
-      });
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
-  async retrieveItem(key) {
-    try{
-      const retrievedItem =  await AsyncStorage.getItem(key);
-      const item = JSON.parse(retrievedItem);
-      return item;
-    } catch (error) {
-      console.log(error.message);
-    }
-    return
   }
 
   render() {
@@ -86,7 +45,7 @@ export default class App extends Component<{}> {
             flexDirection: 'row',
             justifyContent: 'flex-start',
           }}>
-          <Text style = {styles.mainListViewRow}>{item.startDate + " to " + item.endDate}</Text>
+          <Text style = {styles.mainListViewRow}>{item.shortDescription + "\n" + item.startDate + " to " + item.endDate}</Text>
           </View>
           <View style ={{
             flexDirection: 'row',
@@ -98,7 +57,7 @@ export default class App extends Component<{}> {
             alignItems: 'center',
             justifyContent: 'flex-end',
           }}>
-          <Progress.Bar progress={0.2} width={60} />
+          <Progress.Bar progress={item.percentageDaysPassed} width={60} />
           </View>
           </View>
           </View>
@@ -168,11 +127,8 @@ export default class App extends Component<{}> {
              <View style = {styles.popupButtonView} >
              <Button
              onPress={()=>{
-               var goal = new Goal();
+               var goal = new Goal(this.state.startDate, this.state.endDate, "Short Description","Long Description", 0.0);
                var goalCategory = "";
-               goal.startDate = this.state.startDate;
-               goal.endDate = this.state.endDate;
-               goal.description = "description has been set.";
                const startDate = moment(this.state.startDate);
                const endDate = moment(this.state.endDate);
                const difference = endDate.diff(startDate, "days");
@@ -204,12 +160,100 @@ export default class App extends Component<{}> {
       </View>
     );
   }
+
+async storeItem(key, item) {
+  try{
+      var jsonOfItem = await AsyncStorage.setItem(key, JSON.stringify(item));
+      return jsonOfItem;
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 
-var Goal = function () {
-  this.startDate = "No Date";
-  this.endDate = "No Date";
-  this.description = "No description";
+async retrieveGoals() {
+  try {
+    this.retrieveItem("Short-term").then((goals) => {
+      if (goals) {
+        var index = 0;
+        goals.forEach(function (goal)
+        {
+          var updatedGoal = new Goal(goal.startDate, goal.endDate, goal.shortDescription, goal.longDescription, goal.percentageDaysPassed);
+          updatedGoal.updatePercentageDaysPassed();
+          goals[index] = updatedGoal;
+          index++;
+      });
+        this.setState({shortTermGoals: goals});
+      }
+    }).catch((error) => {
+            console.log('Promise is rejected with error: ' + error);
+        });
+    this.retrieveItem("Mid-term").then((goals) => {
+      if (goals) {
+        var index = 0;
+        goals.forEach(function (goal)
+        {
+          var updatedGoal = new Goal(goal.startDate, goal.endDate, goal.shortDescription, goal.longDescription, goal.percentageDaysPassed);
+          updatedGoal.updatePercentageDaysPassed();
+          goals[index] = updatedGoal;
+          index++;
+      });
+        this.setState({midTermGoals: goals});
+      }
+    }).catch((error) => {
+            console.log('Promise is rejected with error: ' + error);
+        });;
+    this.retrieveItem("Long-term").then((goals) => {
+      if (goals) {
+        var index = 0;
+        goals.forEach(function (goal)
+        {
+          var updatedGoal = new Goal(goal.startDate, goal.endDate, goal.shortDescription, goal.longDescription, goal.percentageDaysPassed);
+          updatedGoal.updatePercentageDaysPassed();
+          goals[index] = updatedGoal;
+          index++;
+      }).catch((error) => {
+              console.log('Promise is rejected with error: ' + error);
+          });;
+        this.setState({longTermGoals: goals});
+      }
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+async retrieveItem(key) {
+  try{
+    const retrievedItem =  await AsyncStorage.getItem(key);
+    const item = JSON.parse(retrievedItem);
+    return item;
+  } catch (error) {
+    console.log(error.message);
+  }
+  return
+}
+}
+var Goal = function (startDate, endDate, longDescription, shortDescription, percentageDaysPassed) {
+  this.startDate = startDate;
+  this.endDate = endDate;
+  this.longDescription = longDescription;
+  this.percentageDaysPassed = percentageDaysPassed;
+  this.shortDescription = shortDescription;
+  this.updatePercentageDaysPassed = function () {
+    const startDate = moment(this.startDate);
+    const endDate = moment(this.endDate);
+    const currentDate = moment(new Date());
+    const currentDifference = currentDate.diff(startDate, "days");
+    const totalDifference = endDate.diff(startDate, "days");
+    const ratio = currentDifference/totalDifference;
+    if(ratio >= 0) {
+      this.percentageDaysPassed = ratio;
+    } else {
+      this.percentageDaysPassed = 0.0;
+    }
+
+    };
+
 }
 const styles = StyleSheet.create({
   container: {
