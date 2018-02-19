@@ -37,32 +37,39 @@ export default class App extends Component<{}> {
   render() {
     return (
       <View style = {styles.container} >
-      <SectionList
-        sections = {[
-          {title: 'Short-term', data: this.state.shortTermGoals},
-          {title: 'Medium-term', data: this.state.midTermGoals},
-          {title: 'Long-term', data: this.state.longTermGoals},
-          ]}
+        <SectionList
+          sections = {[
+            {title: 'Short-term', data: this.state.shortTermGoals},
+            {title: 'Medium-term', data: this.state.midTermGoals},
+            {title: 'Long-term', data: this.state.longTermGoals},
+            ]}
           renderItem = {({item}) =>
-          <View style= {styles.mainSectionListRow} >
-          <View style = {styles.mainSectionListRowGoalSummary} >
-          <Text style = {styles.mainListViewRow}>{item.shortDescription + "\n" + item.startDate + " to " + item.endDate}</Text>
-          </View>
-          <View style = {styles.mainSectionListRowProgressBarContainer} >
-          <View style = {styles.mainSectionListRowProgressBar} >
-          <Progress.Bar progress={item.percentageDaysPassed} width={60} />
-          </View>
-          </View>
-          </View>
+            <View style= {styles.mainSectionListRow} >
+              <View style = {styles.mainSectionListRowGoalSummary} >
+                <Text style = {styles.mainListViewRow}>
+                {item.shortDescription + "\n" + item.startDate + " to " + item.endDate}
+                </Text>
+              </View>
+              <View style = {styles.mainSectionListRowProgressBarContainer} >
+                <View style = {styles.mainSectionListRowProgressBar} >
+                  <Progress.Bar progress={item.percentageDaysPassed} width={60} />
+                </View>
+              </View>
+            </View>
           }
-          renderSectionHeader = {({section}) => <Text style = {styles.mainListViewHeader}> {section.title} </Text>}
+          renderSectionHeader = {({section}) =>
+            <Text style = {styles.mainListViewHeader}>
+            {section.title}
+            </Text>
+          }
           keyExtractor = {(item, index) => index} />
-          <FAB buttonColor="blue" visible={true} onClickAction={()=>{this.addNewGoalPopup.show();}}/>
-          <PopupDialog ref = {(addNewGoalPopup) => { this.addNewGoalPopup = addNewGoalPopup;}}>
-              <View style = {styles.addGoalPopup}>
-                <View style = {styles.addGoalPopupDatePickerContainer}>
-                <Text
-                style = {styles.popupText}>
+          <FAB buttonColor="blue" visible={true}
+          onClickAction={()=>{this.addNewGoalPopup.show();}}/>
+          <PopupDialog ref = {(addNewGoalPopup) =>
+            { this.addNewGoalPopup = addNewGoalPopup;}}>
+            <View style = {styles.addGoalPopup}>
+              <View style = {styles.addGoalPopupDatePickerContainer}>
+                <Text style = {styles.popupText}>
                 Choose your start date.
                 </Text>
                 <DatePicker
@@ -86,11 +93,10 @@ export default class App extends Component<{}> {
                    }
                  }}
                  onDateChange={(date) => {this.setState({startDate: date})}}
-                 />
+                />
               </View>
               <View style = {styles.addGoalPopupDatePickerContainer}>
-              <Text
-              style = {styles.popupText}>
+              <Text style = {styles.popupText}>
               Choose your end date.
               </Text>
               <DatePicker
@@ -115,21 +121,27 @@ export default class App extends Component<{}> {
                }}
                onDateChange={(date) => {this.setState({endDate: date})}}
                />
-               </View>
-               <View style = {styles.addGoalPopupDescriptionTextFieldsContainer}>
+              </View>
+              <View style = {styles.addGoalPopupDescriptionTextFieldsContainer}>
                <TextInput style = {styles.addGoalPopupTextInput}
-                onChangeText={(text) => this.setState({mostCurrentGoalShortDescription: text})}
+                onChangeText={(text) =>
+                  this.setState({mostCurrentGoalShortDescription: text})}
                 placeholder = "Enter your goal title here."
                />
-                <TextInput style = {styles.addGoalPopupTextInput}
-                  onChangeText={(text) => this.setState({mostCurrentGoalLongDescription: text})}
-                  placeholder = "Enter your goal description here."
-                />
-               </View>
-               <View style = {styles.popupButtonView} >
+               <TextInput style = {styles.addGoalPopupTextInput}
+                onChangeText={(text) =>
+                  this.setState({mostCurrentGoalLongDescription: text})}
+                placeholder = "Enter your goal description here."
+               />
+              </View>
+              <View style = {styles.popupButtonView} >
                <Button
                onPress={()=>{
-                 var goal = new Goal(this.state.startDate, this.state.endDate, this.state.mostCurrentGoalShortDescription,this.state.mostCurrentGoalLongDescription, 0.0);
+                 var goal = new Goal(this.state.startDate,
+                                     this.state.endDate,
+                                     this.state.mostCurrentGoalShortDescription,
+                                     this.state.mostCurrentGoalLongDescription,
+                                     0.0);
                  var goalCategory = "";
                  const startDate = moment(this.state.startDate);
                  const endDate = moment(this.state.endDate);
@@ -180,7 +192,11 @@ async retrieveGoals() {
         var index = 0;
         goals.forEach(function (goal)
         {
-          var updatedGoal = new Goal(goal.startDate, goal.endDate, goal.shortDescription, goal.longDescription, goal.percentageDaysPassed);
+          var updatedGoal = new Goal(goal.startDate,
+                                     goal.endDate,
+                                     goal.shortDescription,
+                                     goal.longDescription,
+                                     goal.percentageDaysPassed);
           updatedGoal.updatePercentageDaysPassed();
           goals[index] = updatedGoal;
           index++;
@@ -195,7 +211,11 @@ async retrieveGoals() {
             var index = 0;
             goals.forEach(function (goal)
             {
-              var updatedGoal = new Goal(goal.startDate, goal.endDate, goal.shortDescription, goal.longDescription, goal.percentageDaysPassed);
+              var updatedGoal = new Goal(goal.startDate,
+                                         goal.endDate,
+                                         goal.shortDescription,
+                                         goal.longDescription,
+                                         goal.percentageDaysPassed);
               updatedGoal.updatePercentageDaysPassed();
               goals[index] = updatedGoal;
               index++;
@@ -210,7 +230,11 @@ async retrieveGoals() {
                 var index = 0;
                 goals.forEach(function (goal)
                 {
-                  var updatedGoal = new Goal(goal.startDate, goal.endDate, goal.shortDescription, goal.longDescription, goal.percentageDaysPassed);
+                  var updatedGoal = new Goal(goal.startDate,
+                                             goal.endDate,
+                                             goal.shortDescription,
+                                             goal.longDescription,
+                                             goal.percentageDaysPassed);
                   updatedGoal.updatePercentageDaysPassed();
                   goals[index] = updatedGoal;
                   index++;
