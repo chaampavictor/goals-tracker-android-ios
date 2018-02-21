@@ -17,7 +17,8 @@ import {
   Text,
   View,
   Button,
-  TextInput
+  TextInput,
+  // Dimensions,
 } from 'react-native';
 import moment from 'moment';
 export default class App extends Component<{}> {
@@ -52,7 +53,7 @@ export default class App extends Component<{}> {
               </View>
               <View style = {styles.mainSectionListRowProgressBarContainer} >
                 <View style = {styles.mainSectionListRowProgressBar} >
-                  <Progress.Bar progress={item.percentageDaysPassed} width={60} />
+                  <Progress.Bar progress={item.percentageDaysPassed} width={100} />
                 </View>
               </View>
             </View>
@@ -308,8 +309,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
   mainListViewHeader: {
@@ -319,8 +318,9 @@ const styles = StyleSheet.create({
   },
   mainListViewRow: {
     fontSize: 12,
-    textAlign: 'center',
-    padding: 10,
+    textAlign: 'left',
+    padding: 12,
+    marginLeft: 12,
   },
   mainSectionListRow: {
     flexDirection: 'row',
@@ -335,6 +335,7 @@ const styles = StyleSheet.create({
     height: 8,
     alignItems: 'center',
     justifyContent: 'flex-end',
+    marginRight: 12,
   },
   mainSectionListRowProgressBarContainer: {
     flexDirection: 'row',
