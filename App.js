@@ -18,7 +18,7 @@ import {
   View,
   Button,
   TextInput,
-  // Dimensions,
+  TouchableHighlight,
 } from 'react-native';
 import moment from 'moment';
 export default class App extends Component<{}> {
@@ -31,10 +31,18 @@ export default class App extends Component<{}> {
                     midTermGoals: [],
                     longTermGoals: [],
                     mostCurrentGoalShortDescription: "",
-                    mostCurrentGoalLongDescription: ""};
+                    mostCurrentGoalLongDescription: "",
+                    rowHeight: 0};
     this.retrieveGoals();
   }
 
+  onRowClicked = () => {
+    if(this.state.rowHeight == 0) {
+      this.setState({rowHeight: 80});
+    } else {
+      this.setState({rowHeight: 0});
+    }
+  }
   render() {
     return (
       <View style = {styles.container} >
@@ -45,18 +53,28 @@ export default class App extends Component<{}> {
             {title: 'Long-term', data: this.state.longTermGoals},
             ]}
           renderItem = {({item}) =>
-            <View style= {styles.mainSectionListRow} >
-              <View style = {styles.mainSectionListRowGoalSummary} >
-                <Text style = {styles.mainListViewRow}>
-                {item.shortDescription + "\n" + item.startDate + " to " + item.endDate}
-                </Text>
-              </View>
-              <View style = {styles.mainSectionListRowProgressBarContainer} >
-                <View style = {styles.mainSectionListRowProgressBar} >
-                  <Progress.Bar progress={item.percentageDaysPassed} width={100} />
+            <TouchableHighlight onPress = {this.onRowClicked}
+                                underlayColor = 'transparent'>
+              <View style = {styles.mainSectionListRowContainer}>
+                <View style= {styles.mainSectionListRow} >
+                  <View style = {styles.mainSectionListRowGoalSummary} >
+                    <Text style = {styles.mainListViewRow}>
+                    {item.shortDescription + "\n" + item.startDate + " to " + item.endDate}
+                    </Text>
+                  </View>
+                  <View style = {styles.mainSectionListRowProgressBarContainer} >
+                    <View style = {styles.mainSectionListRowProgressBar} >
+                      <Progress.Bar progress={item.percentageDaysPassed} width={100} />
+                    </View>
+                  </View>
+                </View>
+                <View style= {styles.mainSectionListRowLongDescription} >
+                  <Text style = {styles.mainListViewRow}>
+                  {item.longDescription}
+                  </Text>
                 </View>
               </View>
-            </View>
+            </TouchableHighlight>
           }
           renderSectionHeader = {({section}) =>
             <Text style = {styles.mainListViewHeader}>
@@ -324,11 +342,19 @@ const styles = StyleSheet.create({
   },
   mainSectionListRow: {
     flexDirection: 'row',
+    height: 80,
+  },
+  mainSectionListRowContainer: {
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
   },
   mainSectionListRowGoalSummary: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'flex-start',
+  },
+  mainSectionListRowLongDescription: {
+    height: 80,
   },
   mainSectionListRowProgressBar: {
     flexDirection: 'row',
@@ -338,8 +364,9 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   mainSectionListRowProgressBarContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    marginTop: 16,
   },
   popupButtonView: {
     flex: 1,
