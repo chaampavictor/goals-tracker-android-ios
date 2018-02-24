@@ -68,18 +68,21 @@ export default class App extends Component<{}> {
                     </View>
                   </View>
                 </View>
-                <View style= {styles.mainSectionListRowLongDescription} >
-                  <Text style = {styles.mainListViewRow}>
-                  {item.longDescription}
-                  </Text>
+                <View style= {styles.mainSectionListSeparator} >
                 </View>
               </View>
             </TouchableHighlight>
           }
           renderSectionHeader = {({section}) =>
-            <Text style = {styles.mainListViewHeader}>
-            {section.title}
-            </Text>
+          <View style = {styles.mainSectionListHeaderContainer}>
+              <View>
+                <Text style = {styles.mainListViewHeader}>
+                {section.title}
+              </Text>
+              </View>
+              <View style= {styles.mainSectionListSeparator} >
+              </View>
+          </View>
           }
           keyExtractor = {(item, index) => index} />
           <FAB buttonColor="blue" visible={true}
@@ -334,6 +337,10 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     padding: 25,
   },
+  mainSectionListHeaderContainer: {
+    flex: 1,
+    justifyContent: 'flex-start',
+  },
   mainListViewRow: {
     fontSize: 12,
     textAlign: 'left',
@@ -354,7 +361,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   mainSectionListRowLongDescription: {
-    height: 80,
+    height: 0,
   },
   mainSectionListRowProgressBar: {
     flexDirection: 'row',
@@ -367,6 +374,12 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     marginTop: 16,
+  },
+  mainSectionListSeparator: {
+    height: 1,
+    backgroundColor: 'lightgray',
+    marginLeft: 10,
+    marginRight: 10,
   },
   popupButtonView: {
     flex: 1,
