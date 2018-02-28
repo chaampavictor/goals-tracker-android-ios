@@ -64,7 +64,7 @@ export default class App extends Component<{}> {
                   </View>
                   <View style = {styles.mainSectionListRowProgressBarContainer} >
                     <View style = {styles.mainSectionListRowProgressBar} >
-                      <Progress.Bar progress={item.percentageDaysPassed} width={100} />
+                      <Progress.Bar progress={item.percentageDaysPassed} width={100} color = {"#32cd32"} />
                     </View>
                   </View>
                 </View>
@@ -342,7 +342,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   mainListViewRow: {
-    fontSize: 12,
+    fontSize: 16,
     textAlign: 'left',
     padding: 12,
     marginLeft: 12,
@@ -354,6 +354,7 @@ const styles = StyleSheet.create({
   mainSectionListRowContainer: {
     flexDirection: 'column',
     justifyContent: 'flex-start',
+    paddingTop: 24,
   },
   mainSectionListRowGoalSummary: {
     flex: 1,
