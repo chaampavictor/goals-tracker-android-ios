@@ -21,7 +21,10 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import moment from 'moment';
+import NavigationBar from 'react-native-navbar';
+
 export default class App extends Component<{}> {
+
   constructor(props){
     super(props)
     const currentDate = new Date();
@@ -46,6 +49,9 @@ export default class App extends Component<{}> {
   render() {
     return (
       <View style = {styles.container} >
+        <NavigationBar
+          title={{ title: 'Goals', }}
+          />
         <SectionList
           sections = {[
             {title: 'Short-term', data: this.state.shortTermGoals},
