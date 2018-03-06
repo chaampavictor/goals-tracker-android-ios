@@ -113,11 +113,11 @@ export default class App extends Component<{}> {
                  customStyles={{
                    dateIcon: {
                      position: "absolute",
-                     top: 16,
+                     top: 0,
                      left: 40,
                    },
                    dateInput: {
-                     top: 16,
+                     top: 0,
                      marginLeft: 100,
                    }
                  }}
@@ -140,11 +140,9 @@ export default class App extends Component<{}> {
                customStyles={{
                  dateIcon: {
                    position: "absolute",
-                   top: 16,
                    left: 40,
                  },
                  dateInput: {
-                   top: 16,
                    marginLeft: 100,
                  }
                }}
@@ -156,11 +154,6 @@ export default class App extends Component<{}> {
                 onChangeText={(text) =>
                   this.setState({mostCurrentGoalShortDescription: text})}
                 placeholder = "Enter your goal title here."
-               />
-               <TextInput style = {styles.addGoalPopupTextInput}
-                onChangeText={(text) =>
-                  this.setState({mostCurrentGoalLongDescription: text})}
-                placeholder = "Enter your goal description here."
                />
               </View>
               <View style = {styles.popupButtonView} >
@@ -327,7 +320,7 @@ const styles = StyleSheet.create({
     width: 300
   },
   addGoalPopupDescriptionTextFieldsContainer: {
-    flex: 2,
+    flex: 1,
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "center",
@@ -392,10 +385,14 @@ const styles = StyleSheet.create({
   popupButtonView: {
     flex: 1,
     justifyContent: "center",
+    marginTop: 8,
+    marginLeft: 12,
+    marginRight: 12,
+    marginBottom: 8,
   },
   popupText: {
     fontSize: 16,
-    marginTop: 16,
+    marginTop: 12,
     textAlign: "center",
   },
   popupTextHeader: {
