@@ -4,11 +4,11 @@
  * @flow
  */
 
-import React, { Component } from 'react';
-import PopupDialog from 'react-native-popup-dialog';
-import DatePicker from 'react-native-datepicker'
-import FAB from 'react-native-fab';
-import * as Progress from 'react-native-progress';
+import React, { Component } from "react";
+import PopupDialog from "react-native-popup-dialog";
+import DatePicker from "react-native-datepicker"
+import FAB from "react-native-fab";
+import * as Progress from "react-native-progress";
 import {
   AsyncStorage,
   Platform,
@@ -19,17 +19,17 @@ import {
   Button,
   TextInput,
   TouchableHighlight,
-} from 'react-native';
-import moment from 'moment';
-import NavigationBar from 'react-native-navbar';
+} from "react-native";
+import moment from "moment";
+import NavigationBar from "react-native-navbar";
 
 export default class App extends Component<{}> {
 
   constructor(props){
     super(props)
     const currentDate = new Date();
-    this.state = {startDate:moment(currentDate).format('YYYY-MM-DD').toString(),
-                    endDate: moment(currentDate).format('YYYY-MM-DD').toString(),
+    this.state = {startDate:moment(currentDate).format("YYYY-MM-DD").toString(),
+                    endDate: moment(currentDate).format("YYYY-MM-DD").toString(),
                     shortTermGoals: [],
                     midTermGoals: [],
                     longTermGoals: [],
@@ -50,17 +50,18 @@ export default class App extends Component<{}> {
     return (
       <View style = {styles.container} >
         <NavigationBar
-          title={{ title: 'Goals', }}
+          title={{ title: "Goals", }}
           />
         <SectionList
+          style = {styles.sectionList}
           sections = {[
-            {title: 'Short-term', data: this.state.shortTermGoals},
-            {title: 'Medium-term', data: this.state.midTermGoals},
-            {title: 'Long-term', data: this.state.longTermGoals},
+            {title: "Short-term", data: this.state.shortTermGoals},
+            {title: "Medium-term", data: this.state.midTermGoals},
+            {title: "Long-term", data: this.state.longTermGoals},
             ]}
           renderItem = {({item}) =>
             <TouchableHighlight onPress = {this.onRowClicked}
-                                underlayColor = 'transparent'>
+                                underlayColor = "transparent">
               <View style = {styles.mainSectionListRowContainer}>
                 <View style= {styles.mainSectionListRow} >
                   <View style = {styles.mainSectionListRowGoalSummary} >
@@ -111,7 +112,7 @@ export default class App extends Component<{}> {
                  cancelBtnText="Cancel"
                  customStyles={{
                    dateIcon: {
-                     position: 'absolute',
+                     position: "absolute",
                      top: 16,
                      left: 40,
                    },
@@ -138,7 +139,7 @@ export default class App extends Component<{}> {
                cancelBtnText="Cancel"
                customStyles={{
                  dateIcon: {
-                   position: 'absolute',
+                   position: "absolute",
                    top: 16,
                    left: 40,
                  },
@@ -232,7 +233,7 @@ async retrieveGoals() {
         this.setState({shortTermGoals: goals});
       }
     }).catch((error) => {
-            console.log('Promise is rejected with error: ' + error);
+            console.log("Promise is rejected with error: " + error);
         });
         this.retrieveItem("Mid-term").then((goals) => {
           if (goals) {
@@ -251,7 +252,7 @@ async retrieveGoals() {
             this.setState({midTermGoals: goals});
           }
         }).catch((error) => {
-                console.log('Promise is rejected with error: ' + error);
+                console.log("Promise is rejected with error: " + error);
             });
             this.retrieveItem("Long-term").then((goals) => {
               if (goals) {
@@ -270,7 +271,7 @@ async retrieveGoals() {
                 this.setState({longTermGoals: goals});
               }
             }).catch((error) => {
-                    console.log('Promise is rejected with error: ' + error);
+                    console.log("Promise is rejected with error: " + error);
                 });
   } catch (error) {
     console.log(error.message);
@@ -314,92 +315,95 @@ var Goal = function (startDate, endDate, longDescription, shortDescription, perc
 const styles = StyleSheet.create({
   addGoalPopup: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
+    flexDirection: "column",
+    justifyContent: "flex-start",
   },
   addGoalPopupDatePickerContainer: {
     flex: 2,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
+    flexDirection: "column",
+    justifyContent: "flex-start",
   },
   addGoalPopupDatePicker: {
     width: 300
   },
   addGoalPopupDescriptionTextFieldsContainer: {
     flex: 2,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "center",
   },
   addGoalPopupTextInput: {
     marginTop: 10,
   },
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
+    backgroundColor: "#F5FCFF",
   },
   mainListViewHeader: {
     fontSize: 28,
-    textAlign: 'left',
+    textAlign: "left",
     padding: 25,
   },
   mainSectionListHeaderContainer: {
     flex: 1,
-    justifyContent: 'flex-start',
+    justifyContent: "flex-start",
   },
   mainListViewRow: {
     fontSize: 16,
-    textAlign: 'left',
+    textAlign: "left",
     padding: 12,
     marginLeft: 12,
   },
   mainSectionListRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     height: 80,
   },
   mainSectionListRowContainer: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
+    flexDirection: "column",
+    justifyContent: "flex-start",
     paddingTop: 24,
   },
   mainSectionListRowGoalSummary: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "flex-start",
   },
   mainSectionListRowLongDescription: {
     height: 0,
   },
   mainSectionListRowProgressBar: {
-    flexDirection: 'row',
+    flexDirection: "row",
     height: 8,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+    alignItems: "center",
+    justifyContent: "flex-end",
     marginRight: 12,
   },
   mainSectionListRowProgressBarContainer: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
+    flexDirection: "column",
+    justifyContent: "flex-start",
     marginTop: 16,
   },
   mainSectionListSeparator: {
     height: 1,
-    backgroundColor: 'lightgray',
+    backgroundColor: "lightgray",
     marginLeft: 10,
     marginRight: 10,
   },
   popupButtonView: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   popupText: {
     fontSize: 16,
     marginTop: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   popupTextHeader: {
     fontSize: 20,
     marginTop: 24,
-    textAlign: 'center',
+    textAlign: "center",
+  },
+  sectionList: {
+    backgroundColor: "#FFFFFF",
   },
 });
