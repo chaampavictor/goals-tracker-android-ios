@@ -19,6 +19,7 @@ import {
   Button,
   TextInput,
   TouchableHighlight,
+  Dimensions,
 } from "react-native";
 import moment from "moment";
 import NavigationBar from "react-native-navbar";
@@ -50,8 +51,9 @@ export default class App extends Component<{}> {
     return (
       <View style = {styles.container} >
         <NavigationBar
-          title={{ title: "Goals", }}
+          title = {{ title: "Goals", }}
           />
+        <View style = {styles.graySeparatorLine} width = {Dimensions.get('window').width} />
         <SectionList
           style = {styles.sectionList}
           sections = {[
@@ -331,6 +333,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F5FCFF",
+  },
+  graySeparatorLine: {
+    backgroundColor:"#D3D3D3",
+    height: 1,
   },
   mainListViewHeader: {
     fontSize: 28,
